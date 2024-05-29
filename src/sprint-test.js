@@ -1,7 +1,6 @@
 const Sprint = require("@ashishkuoy/sprint");
 const fs = require("node:fs/promises");
 
-
 const runTest = (code, expectedCellIdToValues) => {
   const sprint = Sprint.getInstance(1000, 300, code, () => 0);
   sprint.execute();
@@ -16,10 +15,10 @@ const runTest = (code, expectedCellIdToValues) => {
     }));
 };
 
-const runTests = async (filePath, tests) => {
+const runTests = async (filePath, testCases) => {
   const code = await fs.readFile(filePath, "utf-8");
 
-  return tests
+  return testCases
     .map(({ name, expectedCellIdToValues, codeMapper }) => {
       const assertionFailures = runTest(codeMapper(code), expectedCellIdToValues)
       return {
@@ -32,15 +31,15 @@ const runTests = async (filePath, tests) => {
 
 /***
  * @param {string} testDir, the directory containing the programs submitted by interns
- * @param {Array} tests, each element contain testName, codeMapper, expectedCellIdToValues
+ * @param {Array} testCases, each element contain testName, codeMapper, expectedCellIdToValues
  * @param {Object} reporter, an reporter to generate the report of the test results
  */
-const runTestForAllInterns = async (testDir, tests, reporter) => {
+const runTestForAllInterns = async (testDir, testCases, reporter) => {
   const filePaths = await fs.readdir(testDir);
 
   Promise.all(
     filePaths.map(fileName => {
-      runTests(`${testDir}/${fileName}`, tests)
+      runTests(`${testDir}/${fileName}`, testCases)
         .then(testResults => reporter.report(fileName, testResults));
     })
   ).then(() => reporter.finalise());
