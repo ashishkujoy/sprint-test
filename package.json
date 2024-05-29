@@ -12,9 +12,5 @@
   "dependencies": {
     "@ashishkuoy/sprint": "^1.0.18",
     "colors": "^1.4.0"
-  },
-  "devDependencies": {
-    "chai": "^5.1.1",
-    "jest": "^29.7.0"
   }
 }
